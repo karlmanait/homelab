@@ -1,0 +1,3 @@
+# Ignore OS images
+metal/images/*
+!metal/images/.gitkeep

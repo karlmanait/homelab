@@ -1,2 +1,2 @@
-# homelab
-Homelab for running services locally
+# Homelab
+Automate provision and setup of self-hosted services running on ARM computers.
