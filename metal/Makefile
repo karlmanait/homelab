@@ -4,7 +4,7 @@ BLK_DEVICE="/dev/sdc"
 
 
 ip_cam_image_src="https://github.com/motioneye-project/motioneyeos/releases/download/20200203/motioneyeos-raspberrypi-20200203.img.xz"
-cluster_node_image_src="https://get.debian.org/images/release/current/arm64/iso-dvd/debian-12.0.0-arm64-DVD-1.iso"
+cluster_node_image_src="https://raspi.debian.net/tested/20230612_raspi_4_bookworm.img.xz"
 ip_cam_image=$(shell echo "${ip_cam_image_src}" | grep -oP "[^\/]+$$")
 cluster_node_image=$(shell echo "${cluster_node_image_src}" | grep -oP "[^\/]+$$")
 
@@ -21,3 +21,11 @@ ip-cam/flash-image:
 .PHONY: ip-cam/post-flash-setup
 ip-cam/post-flash-setup:
 	ip-cam/post-flash-setup.sh ${BLK_DEVICE}
+
+.PHONY: cluster-node/flash-image
+cluster-node/flash-image:
+	xz -d < images/${cluster_node_image} | sudo dd bs=128M of=${BLK_DEVICE} status=progress conv=fdatasync
+
+.PHONY: cluster-node/post-flash-setup
+cluster-node/post-flash-setup:
+	cluster-node/post-flash-setup.sh ${BLK_DEVICE}
