@@ -1,0 +1,16 @@
+---
+services:
+  bitwarden:
+    image: vaultwarden/server:alpine
+    container_name: vaultwarden
+    restart: always
+    environment:
+      WEBSOCKER_ENABLED: "true"
+    volumes:
+      - ${DATA_DIR}:/data
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

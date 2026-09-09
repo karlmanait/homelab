@@ -1,3 +1,17 @@
 # Ignore OS images
 metal/images/*
 !metal/images/.gitkeep
+
+# Environment files
+**/.env
+
+# Caddy runtime data
+services/caddy/caddy-data/
+services/caddy/caddy-config/
+
+# Immich user data
+services/immich/library/
+services/immich/postgres/
+
+# Vaultwarden data
+services/vaultwarden/data/

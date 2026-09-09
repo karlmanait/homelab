@@ -1,0 +1,39 @@
+{$VAULTWARDEN_DOMAIN}:443 {
+  log {
+    level INFO
+    output file {$LOG_FILE} {
+      roll_size 10MB
+      roll_keep 10
+    }
+  }
+
+  tls {
+    dns route53
+  }
+
+  encode gzip
+
+  # Notifications redirected to the WebSocket server
+  reverse_proxy /notifications/hub vaultwarden:3012
+
+  # Proxy everything else to vaultwarden
+  reverse_proxy vaultwarden:80
+}
+
+{$IMMICH_DOMAIN}:443 {
+  log {
+    level INFO
+    output file {$LOG_FILE} {
+      roll_size 10MB
+      roll_keep 10
+    }
+  }
+
+  tls {
+    dns route53
+  }
+
+  encode gzip
+
+  reverse_proxy immich_server:2283
+}
