@@ -15,3 +15,7 @@ services/immich/postgres/
 
 # Vaultwarden data
 services/vaultwarden/data/
+
+# Papra data
+services/papra/app-data/
+services/papra/ingestion/

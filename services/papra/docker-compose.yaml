@@ -1,0 +1,18 @@
+---
+name: homelab
+
+services:
+  papra:
+    image: ghcr.io/papra-hq/papra:26.6.2-root
+    container_name: papra
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./app-data:/app/app-data
+      - ./ingestion:/app/ingestion
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

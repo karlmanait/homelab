@@ -1,0 +1,8 @@
+---
+name: homelab
+
+include:
+  - caddy/docker-compose.yaml
+  - immich/docker-compose.yaml
+  - vaultwarden/docker-compose.yaml
+  - papra/docker-compose.yaml

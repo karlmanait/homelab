@@ -1,6 +1,9 @@
 ---
+name: homelab
+
 services:
   caddy:
+    image: caddy:2.11.4-route53
     build:
       context: .
       dockerfile: Dockerfile

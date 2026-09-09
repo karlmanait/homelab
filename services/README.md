@@ -12,37 +12,33 @@ flowchart LR
     end
 
     subgraph compute_node["Compute Node (Tailscale)"]
-        subgraph caddy_svc["Caddy"]
+        subgraph homelab_net["homelab network"]
             caddy["caddy<br/>:80 :443"]
-        end
-
-        subgraph vaultwarden_svc["Vaultwarden"]
             vaultwarden["vaultwarden<br/>:80<br/>:3012 (WebSocket)"]
+            immich["immich_server<br/>:2283"]
+            papra["papra<br/>:1221"]
         end
 
-        subgraph immich_svc["Immich"]
+        subgraph immich_internal["immich internal network"]
             direction TB
-            subgraph immich_internal["internal network"]
-                immich["immich_server<br/>:2283"]
-                ml["immich_machine_learning<br/>:3003"]
-                redis["immich_redis<br/>:6379"]
-                pg["immich_postgres<br/>:5432"]
-            end
-            immich --> ml
-            immich --> redis
-            immich --> pg
+            immich_ml["immich_machine_learning<br/>:3003"]
+            immich_redis["immich_redis<br/>:6379"]
+            immich_pg["immich_postgres<br/>:5432"]
         end
+        immich --> immich_ml
+        immich --> immich_redis
+        immich --> immich_pg
     end
 
     user -->|"HTTPS via Tailscale"| caddy
 
     caddy -->|"vaultwarden subdomain"| vaultwarden
     caddy -->|"immich subdomain"| immich
-
+    caddy -->|"papra subdomain"| papra
 
     caddy -->|"DNS-01 challenge"| r53
     lets_encrypt -->|"validates TXT record"| r53
-    caddy -->|"requests certificate"| lets_encrypt
+    caddy --> lets_encrypt
 ```
 
 ## How It Works
