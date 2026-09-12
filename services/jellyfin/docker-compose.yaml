@@ -1,0 +1,18 @@
+---
+name: homelab
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.0
+    container_name: jellyfin
+    restart: always
+    volumes:
+      - ./config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./media:/media:ro
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
