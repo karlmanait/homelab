@@ -6,3 +6,4 @@ include:
   - immich/docker-compose.yaml
   - vaultwarden/docker-compose.yaml
   - papra/docker-compose.yaml
+  - prometheus-grafana/docker-compose.yaml

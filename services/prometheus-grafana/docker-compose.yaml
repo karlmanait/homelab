@@ -1,0 +1,72 @@
+---
+name: homelab
+
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    container_name: node_exporter
+    restart: unless-stopped
+    pid: host
+    command:
+      - "--path.rootfs=/host"
+      - "--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var/lib/docker/.+|var/lib/containerd/.+)($|/)"
+      - "--collector.thermal_zone"
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - prometheus-internal
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.55.1
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    networks:
+      - prometheus-internal
+
+  prometheus:
+    image: prom/prometheus:v3.13.3
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - homelab
+      - prometheus-internal
+
+  grafana:
+    image: grafana/grafana:11.6.16
+    container_name: grafana
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+  prometheus-internal:
+    internal: true
+
+volumes:
+  prometheus-data:
+  grafana-data:
+

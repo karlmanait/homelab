@@ -13,14 +13,15 @@ flowchart LR
 
     subgraph compute_node["Compute Node (Tailscale)"]
         subgraph homelab_net["homelab network"]
-            caddy["caddy<br/>:80 :443"]
+            caddy["caddy<br/>:80 :443<br/>:2019 (metrics)"]
             vaultwarden["vaultwarden<br/>:80<br/>:3012 (WebSocket)"]
             immich["immich_server<br/>:2283"]
             papra["papra<br/>:1221"]
+            grafana["grafana<br/>:3000"]
+            prometheus["prometheus<br/>:9090"]
         end
 
-        subgraph immich_internal["immich internal network"]
-            direction TB
+        subgraph immich_internal["immich-internal network"]
             immich_ml["immich_machine_learning<br/>:3003"]
             immich_redis["immich_redis<br/>:6379"]
             immich_pg["immich_postgres<br/>:5432"]
@@ -28,6 +29,13 @@ flowchart LR
         immich --> immich_ml
         immich --> immich_redis
         immich --> immich_pg
+
+        subgraph prom_internal["prometheus-internal network"]
+            node_exporter["node_exporter<br/>:9100"]
+            cadvisor["cadvisor<br/>:8080"]
+        end
+        prometheus -.->|"scrapes metrics"| node_exporter
+        prometheus -.->|"scrapes metrics"| cadvisor
     end
 
     user -->|"HTTPS via Tailscale"| caddy
@@ -35,10 +43,14 @@ flowchart LR
     caddy -->|"vaultwarden subdomain"| vaultwarden
     caddy -->|"immich subdomain"| immich
     caddy -->|"papra subdomain"| papra
+    caddy -->|"grafana subdomain"| grafana
+
+    prometheus -.->|"scrapes metrics"| caddy
+    grafana -->|"queries :9090"| prometheus
 
     caddy -->|"DNS-01 challenge"| r53
     lets_encrypt -->|"validates TXT record"| r53
-    caddy --> lets_encrypt
+    caddy -->|"requests certificates"| lets_encrypt
 ```
 
 ## How It Works
@@ -74,3 +86,17 @@ this address.
 This means even though Caddy obtains publicly trusted Let's Encrypt certificates,
 the services remain private and accessible only to authorized devices on the
 Tailscale network.
+
+### Monitoring (Prometheus + Grafana)
+
+Prometheus scrapes metrics from three sources:
+- **node_exporter** (`prometheus-internal` network) — CPU temperature, RAM, disk,
+  network I/O, load average
+- **cAdvisor** (`prometheus-internal` network) — per-container CPU, memory, network,
+  and block I/O
+- **Caddy** (`homelab` network) — request rate, latency percentiles, status codes,
+  bytes in/out, concurrent requests
+
+Grafana is exposed via Caddy at a subdomain and auto-provisioned with dashboards
+from `prometheus-grafana/grafana/dashboards/`. The `prometheus-internal` network
+is `internal: true`, isolating the scrapers from all other services.
