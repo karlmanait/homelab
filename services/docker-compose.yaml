@@ -8,3 +8,4 @@ include:
   - papra/docker-compose.yaml
   - jellyfin/docker-compose.yaml
   - prometheus-grafana/docker-compose.yaml
+  - jellyfin/docker-compose.yaml

@@ -10,6 +10,8 @@ services:
       - ./config:/config
       - /etc/localtime:/etc/localtime:ro
       - ./media:/media:ro
+    environment:
+      JELLYFIN_PublishedServerUrl: ${BASE_URL}
     networks:
       - homelab
 
