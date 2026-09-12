@@ -9,7 +9,8 @@ services:
     volumes:
       - ./config:/config
       - /etc/localtime:/etc/localtime:ro
-      - ./media:/media:ro
+      - ./media/movies:/media/movies:ro
+      - ./media/tv:/media/tv:ro
     environment:
       JELLYFIN_PublishedServerUrl: ${BASE_URL}
     networks:
