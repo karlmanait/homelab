@@ -16,6 +16,11 @@ services/immich/postgres/
 # Vaultwarden data
 services/vaultwarden/data/
 
+# Jellyfin data
+services/jellyfin/config/
+services/jellyfin/cache/
+services/jellyfin/media/
+
 # Papra data
 services/papra/app-data/
 services/papra/ingestion/
