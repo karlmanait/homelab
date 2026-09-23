@@ -16,6 +16,8 @@ flowchart LR
             caddy["caddy<br/>:80 :443<br/>:2019 (metrics)"]
             vaultwarden["vaultwarden<br/>:80<br/>:3012 (WebSocket)"]
             immich["immich_server<br/>:2283"]
+            storyteller["storyteller<br/>:8001"]
+            jellyfin["jellyfin<br/>:8096"]
             papra["papra<br/>:1221"]
             grafana["grafana<br/>:3000"]
             prometheus["prometheus<br/>:9090"]
@@ -42,6 +44,8 @@ flowchart LR
 
     caddy -->|"vaultwarden subdomain"| vaultwarden
     caddy -->|"immich subdomain"| immich
+    caddy -->|"storyteller subdomain"| storyteller
+    caddy -->|"jellyfin subdomain"| jellyfin
     caddy -->|"papra subdomain"| papra
     caddy -->|"grafana subdomain"| grafana
 
