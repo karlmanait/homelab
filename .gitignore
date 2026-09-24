@@ -24,3 +24,6 @@ services/jellyfin/media/
 # Papra data
 services/papra/app-data/
 services/papra/ingestion/
+
+# Storyteller data
+services/storyteller/data/

@@ -1,0 +1,17 @@
+---
+name: homelab
+
+services:
+  storyteller:
+    image: registry.gitlab.com/storyteller-platform/storyteller:web-v3.0.0-beta.40
+    container_name: storyteller
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/data
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
