@@ -18,9 +18,9 @@ fi
 
 proj_rootdir=$(git rev-parse --show-toplevel)
 config_files="${proj_rootdir}/metal/ip-cam/configs"
-mediamtx_archive="${proj_rootdir}/metal/images/$(basename ${MEDIAMTX_SRC})"
+mediamtx_archive="${proj_rootdir}/metal/packages/$(basename ${MEDIAMTX_SRC})"
 
-# download mediamtx release (cached in metal/images)
+# download mediamtx release (cached in metal/packages)
 if [ ! -f "${mediamtx_archive}" ]; then
   echo "Downloading MediaMTX..."
   if ! wget ${MEDIAMTX_SRC} -O ${mediamtx_archive}; then

@@ -47,7 +47,7 @@ Review these in `ip-cam/post-flash-setup.sh`:
 - `ROOT_PASSWORD` — the root password for console login (SSH as root is key-only)
 - `TIMEZONE` — the timezone (e.g. `Asia/Manila`, `UTC`)
 - `WIFI_COUNTRY` — the WiFi regulatory domain (e.g. `PH`)
-- `MEDIAMTX_SRC` — the source URL for the MediaMTX release (`linux_armv6`), downloaded into `images/`
+- `MEDIAMTX_SRC` — the source URL for the MediaMTX release (`linux_armv6`), downloaded into `packages/`
 - `SSH_PUBKEY` — path to your SSH public key
 
 And in `ip-cam/configs/wlan0.nmconnection`:

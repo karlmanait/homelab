@@ -2,6 +2,10 @@
 metal/images/*
 !metal/images/.gitkeep
 
+# Ignore downloaded packages installed by post-flash setups
+metal/packages/*
+!metal/packages/.gitkeep
+
 # Environment files
 **/.env
 
