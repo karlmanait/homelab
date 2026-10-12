@@ -27,3 +27,8 @@ services/papra/ingestion/
 
 # Storyteller data
 services/storyteller/data/
+
+# Frigate data
+services/frigate/media/
+services/frigate/config/*
+!services/frigate/config/config.yml

@@ -1,7 +1,7 @@
 # Configurations #
-BLK_DEVICE="/dev/sdb"
+BLK_DEVICE="/dev/sdc"
 COMPUTE_NODE_IMAGE_SRC="https://cloud.debian.org/images/cloud/trixie/20260831-2587/debian-13-raspi-arm64-20260831-2587.tar.xz"
-IP_CAM_IMAGE_SRC="https://github.com/motioneye-project/motioneyeos/releases/download/20200203/motioneyeos-raspberrypi-20200203.img.xz"
+IP_CAM_IMAGE_SRC="https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2026-10-06/2026-10-06-raspios-trixie-armhf-lite.img.xz"
 # End Configurations #
 
 compute_node_image=$(shell echo "${COMPUTE_NODE_IMAGE_SRC}" | grep -oP "[^\/]+$$")

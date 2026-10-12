@@ -1,6 +1,5 @@
 # Hardware Setup
-This section guides you through the process of flashing the operating system image onto
-a microSD card or external SSD and configuring the initial boot settings.
+This section guides you through the process of flashing the operating system image onto a microSD card or external SSD and configuring the initial boot settings.
 
 Before proceeding, ensure the following variables in `metal/Makefile` and `metal/compute-node/post-flash-setup.sh` have the correct values:
 - `BLK_DEVICE` — the block device of your microSD card or external SSD (e.g. `/dev/sdb`)
@@ -17,8 +16,7 @@ Flash debian13 image for raspberry pi and configure initial settings.
 
 ### Prerequisites
 Install the following packages on your host machine:
-- `qemu-user-static` and `binfmt-support` — allows the post-flash setup script to install
-  packages into the ARM64 rootfs via QEMU emulation
+- `qemu-user-static` and `binfmt-support` — allows the post-flash setup script to install packages into the ARM64 rootfs via QEMU emulation
 - `parted` — used to resize the root partition to fill the entire disk
 - `gdisk` — provides `sgdisk`, used to relocate the GPT backup header when flashing
   a disk image to a larger SSD
@@ -38,11 +36,11 @@ $ sudo apt install qemu-user-static binfmt-support parted gdisk
 
 
 ## IP Cam
-Flash motioneyeOS and configure initial settings, including WiFi and IP configuration.
+Flash Raspberry Pi OS Lite (32-bit) for the Pi Zero W and configure initial settings, including SSH, WiFi and IP configuration.
 
 ### Steps:
 1. Download image<br/>
-`$ make images/motioneyeos-raspberrypi-20200203.img.xz`
+`$ make images/2026-10-06-raspios-trixie-armhf-lite.img.xz`
 1. Flash image<br/>
 `$ make ip-cam/flash-image`
 1. Update the files in `ip-cam/configs/`
