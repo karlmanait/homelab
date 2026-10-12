@@ -47,11 +47,16 @@ Review these in `ip-cam/post-flash-setup.sh`:
 - `ROOT_PASSWORD` — the root password for console login (SSH as root is key-only)
 - `TIMEZONE` — the timezone (e.g. `Asia/Manila`, `UTC`)
 - `WIFI_COUNTRY` — the WiFi regulatory domain (e.g. `PH`)
+- `MEDIAMTX_SRC` — the source URL for the MediaMTX release (`linux_armv6`), downloaded into `images/`
 - `SSH_PUBKEY` — path to your SSH public key
 
 And in `ip-cam/configs/wlan0.nmconnection`:
 - `ssid` / `psk` — the WiFi network (2.4 GHz, WPA2) and password; don't commit the real password
 - `address1` — the static IP and default gateway (e.g. `192.168.1.50/24,192.168.1.1`)
+
+And in `ip-cam/configs/mediamtx.yml`:
+- `pass` — the password of the `frigate` stream user, must match `FRIGATE_RTSP_PASSWORD` in `services/frigate/.env`; don't commit the real password
+- `rpiCamera*` — the stream resolution, fps and bitrate
 
 ### Steps:
 1. Download image<br/>

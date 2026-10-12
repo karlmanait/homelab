@@ -6,7 +6,8 @@ services:
     image: ghcr.io/blakeblackshear/frigate:0.18.0
     container_name: frigate
     restart: always
-    shm_size: 128mb
+    shm_size: 192mb
+    cpus: 2
     env_file: .env
     volumes:
       - ./config:/config
