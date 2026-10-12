@@ -7,6 +7,7 @@ SSH_PUBKEY="${HOME}/.ssh/id_rsa.pub"
 ROOT_PASSWORD="changeme"
 TIMEZONE="Asia/Manila"
 WIFI_COUNTRY="PH"
+MEDIAMTX_SRC="https://github.com/bluenviron/mediamtx/releases/download/v1.21.2/mediamtx_v1.21.2_linux_armv6.tar.gz"
 # End Configurations #
 
 
@@ -17,6 +18,17 @@ fi
 
 proj_rootdir=$(git rev-parse --show-toplevel)
 config_files="${proj_rootdir}/metal/ip-cam/configs"
+mediamtx_archive="${proj_rootdir}/metal/images/$(basename ${MEDIAMTX_SRC})"
+
+# download mediamtx release (cached in metal/images)
+if [ ! -f "${mediamtx_archive}" ]; then
+  echo "Downloading MediaMTX..."
+  if ! wget ${MEDIAMTX_SRC} -O ${mediamtx_archive}; then
+    rm -f ${mediamtx_archive}
+    echo "ERROR: failed to download ${MEDIAMTX_SRC}"
+    exit 1
+  fi
+fi
 
 
 # find partitions by filesystem type using lsblk
@@ -87,6 +99,24 @@ sudo cp ${config_files}/wlan0.nmconnection ${MOUNT_TARGET}/fs/etc/NetworkManager
 sudo chmod 600 ${MOUNT_TARGET}/fs/etc/NetworkManager/system-connections/wlan0.nmconnection
 # the image ships with the wifi radio disabled until the country is set via raspi-config
 sudo sed -i "s|^WirelessEnabled=.*|WirelessEnabled=true|" ${MOUNT_TARGET}/fs/var/lib/NetworkManager/NetworkManager.state
+
+# install mediamtx (single static binary) with its config and a fresh self-signed cert for RTSPS
+echo "Installing MediaMTX..."
+mediamtx_dir=${MOUNT_TARGET}/fs/usr/local/etc/mediamtx
+tar -xzf ${mediamtx_archive} -O mediamtx | sudo tee ${MOUNT_TARGET}/fs/usr/local/bin/mediamtx > /dev/null
+sudo chmod 755 ${MOUNT_TARGET}/fs/usr/local/bin/mediamtx
+sudo mkdir -p ${mediamtx_dir}
+sudo cp ${config_files}/mediamtx.yml ${mediamtx_dir}/mediamtx.yml
+sudo chmod 600 ${mediamtx_dir}/mediamtx.yml
+# cert SAN uses the static ip from the wifi connection
+ip_cam_address=$(grep -oP '^address1=\K[^/]+' ${config_files}/wlan0.nmconnection)
+sudo openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes -days 3650 \
+  -keyout ${mediamtx_dir}/server.key -out ${mediamtx_dir}/server.crt \
+  -subj "/CN=ip-cam" -addext "subjectAltName=IP:${ip_cam_address}" 2>/dev/null
+sudo chmod 600 ${mediamtx_dir}/server.key
+# enable mediamtx on boot
+sudo cp ${config_files}/mediamtx.service ${MOUNT_TARGET}/fs/etc/systemd/system/mediamtx.service
+sudo ln -sf /etc/systemd/system/mediamtx.service ${MOUNT_TARGET}/fs/etc/systemd/system/multi-user.target.wants/mediamtx.service
 
 
 # unmount and cleanup

@@ -1,0 +1,37 @@
+logLevel: info
+
+# RTSPS only (encrypted, TCP); plain RTSP on 8554 is not opened
+rtsp: true
+rtspTransports: [tcp]
+rtspEncryption: "strict"
+rtspsAddress: :8322
+rtspServerKey: /usr/local/etc/mediamtx/server.key
+rtspServerCert: /usr/local/etc/mediamtx/server.crt
+
+# turn off the protocols we don't use
+rtmp: false
+hls: false
+webrtc: false
+srt: false
+
+# replaces the default users, so anonymous access is no longer allowed
+authMethod: internal
+authInternalUsers:
+- user: frigate
+  # must match FRIGATE_RTSP_PASSWORD in services/frigate/.env
+  pass: frigate_password
+  ips: []
+  permissions:
+  - action: read
+    path: cam
+
+paths:
+  cam:
+    source: rpiCamera
+    rpiCameraWidth: 1280
+    rpiCameraHeight: 960
+    rpiCameraFPS: 10
+    rpiCameraCodec: hardwareH264
+    rpiCameraBitrate: 2000000
+    rpiCameraIDRPeriod: 10
+    rpiCameraH264Profile: high
