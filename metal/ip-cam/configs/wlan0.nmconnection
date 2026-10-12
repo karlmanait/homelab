@@ -1,0 +1,23 @@
+[connection]
+id=wlan0
+type=wifi
+interface-name=wlan0
+autoconnect=true
+
+[wifi]
+mode=infrastructure
+ssid=My Home Wifi
+# disable power saving, it causes latency spikes and drops on the camera stream
+powersave=2
+
+[wifi-security]
+key-mgmt=wpa-psk
+psk=WifiPassword123!
+
+[ipv4]
+method=manual
+address1=192.168.1.50/24,192.168.1.1
+dns=1.1.1.1;8.8.8.8;
+
+[ipv6]
+method=disabled
