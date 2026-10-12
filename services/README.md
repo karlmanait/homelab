@@ -18,6 +18,7 @@ flowchart LR
             immich["immich_server<br/>:2283"]
             storyteller["storyteller<br/>:8001"]
             jellyfin["jellyfin<br/>:8096"]
+            frigate["frigate<br/>:8971"]
             papra["papra<br/>:1221"]
             grafana["grafana<br/>:3000"]
             prometheus["prometheus<br/>:9090"]
@@ -40,6 +41,11 @@ flowchart LR
         prometheus -.->|"scrapes metrics"| cadvisor
     end
 
+    subgraph home_lan["Home LAN"]
+        ip_cam["ip-cam (Pi Zero W)<br/>MediaMTX :8322 (RTSPS)"]
+    end
+    frigate -->|"RTSPS pull"| ip_cam
+
     user -->|"HTTPS via Tailscale"| caddy
 
     caddy -->|"vaultwarden subdomain"| vaultwarden
@@ -48,6 +54,7 @@ flowchart LR
     caddy -->|"jellyfin subdomain"| jellyfin
     caddy -->|"papra subdomain"| papra
     caddy -->|"grafana subdomain"| grafana
+    caddy -->|"frigate subdomain"| frigate
 
     prometheus -.->|"scrapes metrics"| caddy
     grafana -->|"queries :9090"| prometheus

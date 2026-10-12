@@ -10,3 +10,4 @@ include:
   - prometheus-grafana/docker-compose.yaml
   - jellyfin/docker-compose.yaml
   - storyteller/docker-compose.yaml
+  - frigate/docker-compose.yaml

@@ -1,0 +1,47 @@
+mqtt:
+  enabled: false
+
+# TLS is terminated by Caddy
+tls:
+  enabled: false
+
+detectors:
+  cpu:
+    type: cpu
+
+go2rtc:
+  streams:
+    # rtspx:// is RTSPS without certificate verification (ip-cam uses a self-signed cert)
+    cam1:
+      - rtspx://frigate:{FRIGATE_RTSP_PASSWORD}@192.168.254.50:8322/cam
+
+cameras:
+  cam1:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam1
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 480
+      fps: 3
+    motion:
+      threshold: 35
+      contour_area: 30
+      lightning_threshold: 0.6
+    objects:
+      track:
+        - person
+    record:
+      enabled: true
+      motion:
+        days: 7
+      alerts:
+        retain:
+          days: 14
+      detections:
+        retain:
+          days: 14
